@@ -1,28 +1,22 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button, TextField, Typography, Box, Container, Alert } from '@mui/material';
 
-const Register = ({ onRegister }) => {
+const Login = ({ onLogin }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
 
-    const handleRegister = async () => {
+    const handleLogin = async () => {
         try {
-            if (password !== confirmPassword) {
-                setError('Passwords do not match');
-                return;
-            }
-            const response = await axios.post('http://localhost:8000/api/register/', {
+            const response = await axios.post('http://localhost:8000/api/login/', {
                 username,
                 password,
             });
-            const { user } = response.data;
-            onRegister(user);
+            onLogin(response.data.user);
         } catch (error) {
-            setError('Registration failed: ' + error.response.data.error);
+            setError('Login failed: ' + error.response.data.error);
         }
     };
 
@@ -30,7 +24,7 @@ const Register = ({ onRegister }) => {
         <Container maxWidth="xs">
             <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Typography component="h1" variant="h5">
-                    Register
+                    Login
                 </Typography>
                 {error && <Alert severity="error">{error}</Alert>}
                 <TextField
@@ -51,29 +45,20 @@ const Register = ({ onRegister }) => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="Confirm Password"
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                />
                 <Button
                     fullWidth
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
-                    onClick={handleRegister}
+                    onClick={handleLogin}
                 >
-                    Register
+                    Login
                 </Button>
                 <Typography variant="body2">
-                    Already have an account? <RouterLink to="/login">Login</RouterLink>
+                    Don't have an account? <Link to="/register">Register</Link>
                 </Typography>
             </Box>
         </Container>
     );
 };
 
-export default Register;
+export default Login;
