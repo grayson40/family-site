@@ -8,7 +8,6 @@ from rest_framework.authtoken.models import Token
 from .serializers import UserSerializer, UserContentSerializer
 from .models import UserContent
 
-
 @api_view(['POST'])
 def login(request):
     if request.method == 'POST':
@@ -22,7 +21,6 @@ def login(request):
             return Response({'user': {**serializer.data, 'token': token.key}})
         else:
             return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
-
 
 @api_view(['POST'])
 @csrf_exempt
@@ -38,8 +36,7 @@ def register(request):
         token = Token.objects.create(user=user)
         return Response({'message': 'User registered successfully', 'user': {'username': user.username, 'token': token.key}}, status=status.HTTP_201_CREATED)
 
-
-class UserContentView(generics.ListCreateAPIView):
+class UserContentListView(generics.ListCreateAPIView):
     queryset = UserContent.objects.all()
     serializer_class = UserContentSerializer
 
