@@ -1,10 +1,12 @@
 // Add to your existing imports
 import { useState } from 'react';
 import { Paper, TextField, Button, Typography, Container } from '@mui/material';
+import UserContentList from '../components/UserContentList';
 
 // New component for content upload
 const Profile = ({ user }) => {
     const [content, setContent] = useState('');
+    const [refresh, setRefresh] = useState(false);
 
     const handleUpload = async () => {
         console.log("user.id: ", user)
@@ -16,35 +18,38 @@ const Profile = ({ user }) => {
             },
             body: JSON.stringify({ content: content, user: user.id }),
         });
-    
+
         if (response.ok) {
             console.log('Content uploaded successfully');
             setContent('');
+            setRefresh(!refresh);
         } else {
             console.error('Failed to upload content');
         }
     };
-    
 
     return (
-        <Container maxWidth="sm">
-            <Paper style={{ padding: 16 }}>
-                <Typography variant="h6">Upload Content</Typography>
-                <TextField
-                    fullWidth
-                    multiline
-                    rows={4}
-                    variant="outlined"
-                    label="Content"
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    margin="normal"
-                />
-                <Button variant="contained" color="primary" onClick={handleUpload}>
-                    Upload
-                </Button>
-            </Paper>
-        </Container>
+        <>
+            <Container maxWidth="sm">
+                <Paper style={{ padding: 16 }}>
+                    <Typography variant="h6">Upload Content</Typography>
+                    <TextField
+                        fullWidth
+                        multiline
+                        rows={4}
+                        variant="outlined"
+                        label="Content"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        margin="normal"
+                    />
+                    <Button variant="contained" color="primary" onClick={handleUpload}>
+                        Upload
+                    </Button>
+                </Paper>
+            </Container>
+            <UserContentList user={user} refresh={refresh} />
+        </>
     );
 };
 
